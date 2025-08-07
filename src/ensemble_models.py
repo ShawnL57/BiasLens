@@ -127,6 +127,20 @@ class WeightedEnsemble:
         
         # return class with highest probability
         return self.lr_model.classes_[np.argmax(combined_probs, axis=1)]
+    
+    def predict_proba(self, X):
+        """Return weighted probabilities"""
+        lr_probs = self.lr_model.predict_proba(X)
+        
+        svm_scores = self.svm_model.decision_function(X)
+        if len(svm_scores.shape) == 1:
+            svm_probs = np.column_stack([1 - svm_scores, svm_scores])
+        else:
+            from scipy.special import softmax
+            svm_probs = softmax(svm_scores, axis=1)
+            
+        combined_probs = (self.lr_weight * lr_probs + self.svm_weight * svm_probs)
+        return combined_probs
 
 def evaluate_model(model, X_train, X_test, y_train, y_test, model_name):
     """evaluate a single model and return results"""

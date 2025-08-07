@@ -17,4 +17,5 @@ X_vectorized = vectorizer.fit_transform(X)
 import joblib
 joblib.dump(X_vectorized, 'processed/X_vectorized.pkl')
 joblib.dump(y, 'processed/y_labels.pkl')
+joblib.dump(vectorizer, "processed/vectorizer.pkl")
 print("Feature extraction complete. TF-IDF matrix and labels saved.")
